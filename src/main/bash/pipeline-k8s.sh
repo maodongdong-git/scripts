@@ -32,7 +32,7 @@ function logInToPaas() {
 	local kubeUrl="https://${apiUrl}"
 	echo "Path to kubectl [${KUBECTL_BIN}]"
 	if [[ "${TEST_MODE}" == "false" && "${KUBECTL_BIN}" != "/"* ]]; then
-		echo "Downloading CLI"
+		echo "Downloading CLI==="
 		curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/${SYSTEM}/amd64/kubectl" --fail
 		KUBECTL_BIN="$(pwd)/${KUBECTL_BIN}"
 	fi
