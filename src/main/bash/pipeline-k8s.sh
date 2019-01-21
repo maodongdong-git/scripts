@@ -87,7 +87,6 @@ function logInToPaas() {
 }
 
 function testDeploy() {
-	echo "run function 1"
 	local appName
 	appName=$(retrieveAppName)
 	# Log in to PaaS to start deployment
