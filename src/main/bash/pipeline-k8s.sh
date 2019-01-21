@@ -74,7 +74,8 @@ function testDeploy() {
 	appName=$(retrieveAppName)
 	# Log in to PaaS to start deployment
 	logInToPaas
-
+	echo "retrieveAppName==:"
+	echo $(retrieveAppName)
 	deployServices
 
 	# deploy app
