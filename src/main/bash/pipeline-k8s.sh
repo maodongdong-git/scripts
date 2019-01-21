@@ -574,10 +574,10 @@ function isAppRunning() {
 #		echo "Fail #$i/${retries}... will try again in [${waitTime}] seconds"
 #		sleep "${waitTime}"
 #	done
-	if [[ "${running}" == 1 ]]; then
-		echo "App failed to start"
-		exit 1
-	fi
+#	if [[ "${running}" == 1 ]]; then
+#		echo "App failed to start"
+#		exit 1
+#	fi
 	echo ""
 	echo "App started successfully!"
 }
