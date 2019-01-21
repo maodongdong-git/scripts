@@ -49,19 +49,36 @@ function logInToPaas() {
 		k8sCa="${tmpCa}"
 	fi
 	"${KUBECTL_BIN}" config set-cluster "${k8sClusterName}" --server="${kubeUrl}" --certificate-authority="${k8sCa}" --embed-certs=true --kubeconfig="${KUBE_CONFIG_PATH}"
+	echo ${k8sClusterName}
+	echo "aaa"
+	echo ${kubeUrl}
+	echo "caxx"
+	echo ${k8sca}
 	# TOKEN will get injected as a credential if present
 	if [[ "${TOKEN}" != "" || "${k8sToken}" != "" ]]; then
+		echo "TOKEN or k8sToken not empty"
+		echo ${TOKEN}
+		echo "==="
+		echo ${k8sToken}
 		TOKEN="${TOKEN:-${k8sToken}}"
 		"${KUBECTL_BIN}" config set-credentials "${k8sClusterUser}" --token="${TOKEN}"  --kubeconfig="${KUBE_CONFIG_PATH}"
 	elif [[ "${k8sTokenPath}" != "" ]]; then
+	    echo "k8sTokenPath not empty"
+		echo ${k8sTokenPath}
 		local tokenContent
 		tokenContent="$(cat "${k8sTokenPath}")"
 		"${KUBECTL_BIN}" config set-credentials "${k8sClusterUser}" --token="${tokenContent}" --kubeconfig="${KUBE_CONFIG_PATH}"
 	elif [[ "${k8sClientKey}" != "" && "${k8sClientCert}" != "" ]]; then
+		echo "xxxxx"
 		"${KUBECTL_BIN}" config set-credentials "${k8sClusterUser}" --certificate-authority="${k8sCa}" --client-key="${k8sClientKey}" --client-certificate="${k8sClientCert}"  --kubeconfig="${KUBE_CONFIG_PATH}"
 	else
+		echo "aaaa"
 		"${KUBECTL_BIN}" config set-credentials "${k8sClusterUser}" --certificate-authority="${k8sCa}" --kubeconfig="${KUBE_CONFIG_PATH}"
 	fi
+	echo "k8sClusterUser=="
+	echo ${k8sClusterUser}
+	echo "k8sSystemName=="
+	echo ${k8sSystemName}
 	"${KUBECTL_BIN}" config set-context "${k8sSystemName}" --cluster="${k8sClusterName}" --user="${k8sClusterUser}" --kubeconfig="${KUBE_CONFIG_PATH}"
 	"${KUBECTL_BIN}" config use-context "${k8sSystemName}" --kubeconfig="${KUBE_CONFIG_PATH}"
 
