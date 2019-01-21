@@ -87,6 +87,7 @@ function logInToPaas() {
 }
 
 function testDeploy() {
+	echo "run function 1"
 	local appName
 	appName=$(retrieveAppName)
 	# Log in to PaaS to start deployment
@@ -99,6 +100,7 @@ function testDeploy() {
 }
 
 function testRollbackDeploy() {
+	echo "run function 2"
 	rm -rf "${OUTPUT_FOLDER}/test.properties"
 	local latestProdTag="${1}"
 	local appName
@@ -116,6 +118,7 @@ function testRollbackDeploy() {
 }
 
 function deployService() {
+	echo "run function 3"
 	local serviceName
 	serviceName="${1}"
 	local serviceType
@@ -168,22 +171,27 @@ function deployService() {
 }
 
 function eurekaName() {
+	echo "run function 4"
 	echo "${PARSED_YAML}" | jq --arg x "${LOWERCASE_ENV}" '.[$x].services[] | select(.type == "eureka") | .name' | sed 's/^"\(.*\)"$/\1/' || echo ""
 }
 
 function rabbitMqName() {
+	echo "run function 5"
 	echo "${PARSED_YAML}" | jq --arg x "${LOWERCASE_ENV}" '.[$x].services[] | select(.type == "rabbitmq") | .name' | sed 's/^"\(.*\)"$/\1/' || echo ""
 }
 
 function mySqlName() {
+	echo "run function 6"
 	echo "${PARSED_YAML}" | jq --arg x "${LOWERCASE_ENV}" '.[$x].services[] | select(.type == "mysql") | .name' | sed 's/^"\(.*\)"$/\1/' || echo ""
 }
 
 function mySqlDatabase() {
+	echo "run function 7"
 	echo "${PARSED_YAML}" | jq --arg x "${LOWERCASE_ENV}" '.[$x].services[] | select(.type == "mysql") | .database' | sed 's/^"\(.*\)"$/\1/' || echo ""
 }
 
 function appSystemProps() {
+	echo "run function 8"
 	local systemProps
 	systemProps=""
 	# TODO: Not every system needs Eureka or Rabbit. But we need to bind this somehow...
@@ -208,6 +216,7 @@ function appSystemProps() {
 }
 
 function deleteService() {
+	echo "run function 9"
 	local serviceName="${1}"
 	local serviceType="${2}"
 	echo "Deleting all possible entries with name [${serviceName}]"
@@ -215,6 +224,7 @@ function deleteService() {
 }
 
 function deployRabbitMq() {
+	echo "run function 10"
 	local serviceName="${1}"
 	local objectDeployed
 	objectDeployed="$(objectDeployed "service" "${serviceName}")"
@@ -243,16 +253,19 @@ function deployRabbitMq() {
 }
 
 function deployApp() {
+	echo "run function 11"
 	local fileName="${1}"
 	"${KUBECTL_BIN}" --context="${K8S_CONTEXT}" --namespace="${PAAS_NAMESPACE}" create -f "${fileName}" --kubeconfig="${KUBE_CONFIG_PATH}"
 }
 
 function replaceApp() {
+	echo "run function 12"
 	local fileName="${1}"
 	"${KUBECTL_BIN}" --context="${K8S_CONTEXT}" --namespace="${PAAS_NAMESPACE}" replace --force -f "${fileName}" --kubeconfig="${KUBE_CONFIG_PATH}"
 }
 
 function deleteAppByName() {
+	echo "run function 13"
 	local serviceName="${1}"
 	"${KUBECTL_BIN}" --context="${K8S_CONTEXT}" --namespace="${PAAS_NAMESPACE}" delete secret "${serviceName}" --kubeconfig="${KUBE_CONFIG_PATH}" || result=""
 	"${KUBECTL_BIN}" --context="${K8S_CONTEXT}" --namespace="${PAAS_NAMESPACE}" delete persistentvolumeclaim "${serviceName}" --kubeconfig="${KUBE_CONFIG_PATH}" || result=""
@@ -262,11 +275,13 @@ function deleteAppByName() {
 }
 
 function deleteAppByFile() {
+	echo "run function 14"
 	local file="${1}"
 	"${KUBECTL_BIN}" --context="${K8S_CONTEXT}" --namespace="${PAAS_NAMESPACE}" delete -f "${file}" --kubeconfig="${KUBE_CONFIG_PATH}" || echo "Failed to delete app by [${file}] file. Continuing with the script"
 }
 
 function system {
+	echo "run function 15"
 	local unameOut
 	unameOut="$(uname -s)"
 	case "${unameOut}" in
@@ -278,6 +293,7 @@ function system {
 }
 
 function substituteVariables() {
+	echo "run function 16"
 	local variableName="${1}"
 	local substitution="${2}"
 	local fileName="${3}"
@@ -292,6 +308,7 @@ function substituteVariables() {
 }
 
 function deployMySql() {
+	echo "run function 17"
 	local serviceName="${1}"
 	local objectDeployed
 	objectDeployed="$(objectDeployed "service" "${serviceName}")"
@@ -329,12 +346,14 @@ function deployMySql() {
 }
 
 function findAppByName() {
+	echo "run function 18"
 	local serviceName
 	serviceName="${1}"
 	"${KUBECTL_BIN}" --context="${K8S_CONTEXT}" --namespace="${PAAS_NAMESPACE}" get pods -o wide -l app="${serviceName}" --kubeconfig="${KUBE_CONFIG_PATH}" | awk -v "app=${serviceName}" '$1 ~ app {print($0)}'
 }
 
 function deployAndRestartAppWithName() {
+	echo "run function 19"
 	local appName="${1}"
 	local jarName="${2}"
 	local env="${LOWERCASE_ENV}"
@@ -344,6 +363,7 @@ function deployAndRestartAppWithName() {
 }
 
 function deployAndRestartAppWithNameForSmokeTests() {
+	echo "run function 20"
 	local appName="${1}"
 	local version="${2}"
 	local profiles="smoke,kubernetes"
@@ -376,6 +396,7 @@ function deployAndRestartAppWithNameForSmokeTests() {
 }
 
 function deployAndRestartAppWithNameForE2ETests() {
+	echo "run function 21"
 	local appName="${1}"
 	local profiles="e2e,kubernetes"
 	local lowerCaseAppName
@@ -405,15 +426,18 @@ function deployAndRestartAppWithNameForE2ETests() {
 }
 
 function toLowerCase() {
+	echo "run function 22"
 	local string=${1}
 	echo "${string}" | tr '[:upper:]' '[:lower:]'
 }
 
 function lowerCaseEnv() {
+	echo "run function 23"
 	echo "${ENVIRONMENT}" | tr '[:upper:]' '[:lower:]'
 }
 
 function deleteAppInstance() {
+	echo "run function 24"
 	local serviceName="${1}"
 	local lowerCaseAppName
 	lowerCaseAppName=$(toLowerCase "${serviceName}")
@@ -422,6 +446,7 @@ function deleteAppInstance() {
 }
 
 function deployEureka() {
+	echo "run function 25"
 	local imageName="${1}"
 	local appName="${2}"
 	local objectDeployed
@@ -454,10 +479,12 @@ function deployEureka() {
 }
 
 function escapeValueForSed() {
+	echo "run function 26"
 	echo "${1//\//\\/}"
 }
 
 function deployStubRunnerBoot() {
+	echo "run function 27"
 	local imageName="${1}"
 	local repoWithJars="${2}"
 	local rabbitName="${3}.${PAAS_NAMESPACE}"
@@ -502,6 +529,7 @@ function deployStubRunnerBoot() {
 }
 
 function prepareForSmokeTests() {
+	echo "run function 28"
 	echo "Retrieving group and artifact id - it can take a while..."
 	local appName
 	appName="$(retrieveAppName)"
@@ -522,6 +550,7 @@ function prepareForSmokeTests() {
 }
 
 function prepareForE2eTests() {
+	echo "run function 29"
 	echo "Retrieving group and artifact id - it can take a while..."
 	local appName
 	appName="$(retrieveAppName)"
@@ -535,6 +564,7 @@ function prepareForE2eTests() {
 }
 
 function applicationHost() {
+	echo "run function 30"
 	local appName="${1}"
 	if [[ "${KUBERNETES_MINIKUBE}" == "true" ]]; then
 		local apiUrlProp="PAAS_${ENVIRONMENT}_API_URL"
@@ -546,6 +576,7 @@ function applicationHost() {
 }
 
 function portFromKubernetes() {
+	echo "run function 31"
 	local appName="${1}"
 	local jsonPath
 	{ if [[ "${KUBERNETES_MINIKUBE}" == "true" ]]; then
@@ -559,6 +590,7 @@ function portFromKubernetes() {
 }
 
 function waitForAppToStart() {
+	echo "run function 32"
 	local appName="${1}"
 	local port
 	port="$(portFromKubernetes "${appName}")"
@@ -568,6 +600,7 @@ function waitForAppToStart() {
 }
 
 function retrieveApplicationUrl() {
+	echo "run function 33"
 	local appName
 	appName="$(retrieveAppName)"
 	local port
@@ -578,6 +611,7 @@ function retrieveApplicationUrl() {
 }
 
 function isAppRunning() {
+	echo "run function 34"
 	local host="${1}"
 	local port="${2}"
 	local waitTime=5
@@ -599,6 +633,7 @@ function isAppRunning() {
 }
 
 function readTestPropertiesFromFile() {
+	echo "run function 35"
 	local fileLocation="${1:-${OUTPUT_FOLDER}/test.properties}"
 	local key
 	local value
@@ -616,6 +651,7 @@ function readTestPropertiesFromFile() {
 }
 
 function label() {
+	echo "run function 36"
 	local appName="${1}"
 	local key="${2}"
 	local value="${3}"
@@ -624,6 +660,7 @@ function label() {
 }
 
 function objectDeployed() {
+	echo "run function 37"
 	local appType="${1}"
 	local appName="${2}"
 	local result
@@ -636,6 +673,7 @@ function objectDeployed() {
 }
 
 function stageDeploy() {
+	echo "run function 38"
 	local appName
 	appName="$(retrieveAppName)"
 	# Log in to PaaS to start deployment
@@ -648,6 +686,7 @@ function stageDeploy() {
 }
 
 function prodDeploy() {
+	echo "run function 39"
 	# TODO: Consider making it less JVM specific
 	local appName
 	appName="$(retrieveAppName)"
@@ -659,6 +698,7 @@ function prodDeploy() {
 }
 
 function performProductionDeploymentOfTestedApplication() {
+	echo "run function 40"
 	local appName="${1}"
 	local lowerCaseAppName
 	lowerCaseAppName=$(toLowerCase "${appName}")
@@ -705,6 +745,7 @@ function performProductionDeploymentOfTestedApplication() {
 }
 
 function escapeValueForDns() {
+	echo "run function 41"
 	local sed
 	sed="$(sed -e 's/\./-/g;s/_/-/g' <<<"$1")"
 	local lowerCaseSed
@@ -713,6 +754,7 @@ function escapeValueForDns() {
 }
 
 function rollbackToPreviousVersion() {
+	echo "run function 42"
 	local appName
 	appName="$(retrieveAppName)"
 	# Log in to CF to start deployment
@@ -732,6 +774,7 @@ function rollbackToPreviousVersion() {
 }
 
 function completeSwitchOver() {
+	echo "run function 43"
 	local appName
 	appName="$(retrieveAppName)"
 	# Log in to CF to start deployment
@@ -752,12 +795,14 @@ function completeSwitchOver() {
 }
 
 function otherDeployedInstances() {
+	echo "run function 44"
 	local appName="${1}"
 	local changedAppName="${2}"
 	"${KUBECTL_BIN}" --context="${K8S_CONTEXT}" --namespace="${PAAS_NAMESPACE}" get deployments -lname="${appName}" --no-headers --kubeconfig="${KUBE_CONFIG_PATH}" | awk '{print $1}' | grep -v "${changedAppName}" || echo ""
 }
 
 function oldestDeployment() {
+	echo "run function 45"
 	local deployedApps
 	deployedApps="${1}"
 	local oldestDeployment
@@ -766,6 +811,7 @@ function oldestDeployment() {
 }
 
 function dnsEscapedAppNameWithVersionSuffix() {
+	echo "run function 46"
 	local appName="${1}"
 	escapeValueForDns "${appName}"
 }
